@@ -53,6 +53,9 @@ def messages_list(request):
 
 @api.post('users/new')
 def new_user(request):
+    '''
+    Cadastra novo usuario caso nao exista
+    '''
     if not valid_payload(request.POST):
         return JsonResponse({})
     new_user = {}
