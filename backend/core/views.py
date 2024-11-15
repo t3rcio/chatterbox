@@ -79,4 +79,25 @@ def new_user(request):
             'e-mail': new_user.email
         }, 
         safe=False)
+
+@api.get('user/{username}')
+def get_user(request, username):
+    user = {}
+    try:
+        user = User.objects.get(username=username)        
+    except User.DoesNotExist:
+        user = {}
+    except Exception as error:
+        print(error)
     
+    if user:
+        return JsonResponse(
+            {
+                "id": user.id,
+                "username": user.username,
+                "email": user.email
+            },
+            safe=False
+        )
+    return JsonResponse(user)
+
