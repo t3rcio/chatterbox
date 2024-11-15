@@ -72,7 +72,7 @@ class MainHandler(websocket.WebSocketHandler):
         chat_id = kwargs.get('id')
         chat = await get_chat(id=chat_id)
         if not chat:
-            self.write('404 - Does not exist such chat') #TODO improve this 
+            self.write('\{\}')
             return
         
         setattr(self, 'chat_id', chat_id)
@@ -82,8 +82,7 @@ class MainHandler(websocket.WebSocketHandler):
         _message = json.loads(message)
         try:
             conn = await self.route_message(_message)
-            if conn:
-                print(_message.get('text'), ' / ', conn.__dict__['chat_id'])
+            if conn:                
                 conn.write_message(_message.get('text'))
         
         except Exception as error:
@@ -93,7 +92,7 @@ class MainHandler(websocket.WebSocketHandler):
         MainHandler.connections.pop(self)
         diff = str(len(MainHandler.connections))
         if settings.DEBUG:
-            print("Connection close. Still " + diff  + " least")
+            print("Connection close. Remaining " + diff)
         
-        loggin.info('Connection closed. Still ' + diff)
+        loggin.info('Connection closed. Remaining ' + diff)
 
