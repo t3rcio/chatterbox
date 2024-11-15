@@ -2,7 +2,7 @@
 from django.shortcuts import render
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
-
+from django.conf import settings
 from ninja import NinjaAPI
 
 from core.models import Chat, Message
@@ -27,7 +27,9 @@ def new_chat(request):
     Return JsonResponse
     '''
     chat = Chat.objects.create()
-    return JsonResponse(chat.to_dict(), safe=False)
+    response = JsonResponse(chat.to_dict(), safe=False)
+    response['Access-Control-Allow-Origin'] = settings.ALLOWED_CORS_SERVERS
+    return response
 
 @api.get('chat/list')
 def list_chats(request):
@@ -35,7 +37,10 @@ def list_chats(request):
     Returns a chat list
     '''
     chats = list(Chat.objects.to_dict())
-    return JsonResponse(chats, safe=False)
+    response = JsonResponse(chats, safe=False)
+    response['Access-Control-Allow-Origin'] = settings.ALLOWED_CORS_SERVERS
+    return response    
+
 
 @api.get('chat/{id}')
 def get_chat(request, id:str) -> JsonResponse:
@@ -44,7 +49,9 @@ def get_chat(request, id:str) -> JsonResponse:
         response = chat.to_dict()
     except:
         response = {}
-    return JsonResponse(response, safe=False)
+    response = JsonResponse(response, safe=False)
+    response['Access-Control-Allow-Origin'] = settings.ALLOWED_CORS_SERVERS
+    return response    
 
 
 @api.get('messages/list')
