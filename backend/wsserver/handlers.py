@@ -1,10 +1,13 @@
 
 import aiosqlite
 import json
+import logging
+
 from django.conf import settings
 from tornado import websocket
 
 from core.models import Message
+from wsserver.settings import LOG_FILENAME
 
 '''
 Ex. de Message em json
@@ -21,6 +24,10 @@ Ex. de Message em json
     "timestamp": 21354646851463589687 # em javascript Date.now()
 }
 '''
+
+logging.basicConfig(
+    filename=LOG_FILENAME
+)
 
 async def connect():
     '''
@@ -80,10 +87,13 @@ class MainHandler(websocket.WebSocketHandler):
                 conn.write_message(_message.get('text'))
         
         except Exception as error:
-            # TODO: add a log
-            print('ERROR: ' + str(error))            
+            logging.error(str(error))
     
     async def on_close(self):
         MainHandler.connections.pop(self)
+        diff = str(len(MainHandler.connections))
         if settings.DEBUG:
-            print("Connection close. Still " + str(len(MainHandler.connections)) + " least")
+            print("Connection close. Still " + diff  + " least")
+        
+        loggin.info('Connection closed. Still ' + diff)
+
