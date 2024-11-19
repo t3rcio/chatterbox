@@ -10,6 +10,9 @@ For the full list of settings and their values, see
 https://docs.djangoproject.com/en/3.2/ref/settings/
 """
 
+import os
+
+from datetime import datetime
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -125,5 +128,9 @@ STATIC_URL = '/static/'
 
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
-# CORS configs
+# Chatterbox
 ALLOWED_CORS_SERVERS = '*'
+
+FORMAT_DATE = '%Y-%m-%d'
+LOG_FILES_PATH = os.path.join(BASE_DIR, '_logs')
+LOG_FILENAME = LOG_FILES_PATH + datetime.now().strftime(FORMAT_DATE) + '.log'

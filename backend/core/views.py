@@ -1,5 +1,8 @@
 
+import logging
+
 from django.shortcuts import render
+from django.conf import settings
 from django.contrib.auth.models import User
 from django.http import JsonResponse, HttpResponse
 from django.conf import settings
@@ -8,6 +11,10 @@ from ninja import NinjaAPI
 from core.models import Chat, Message
 
 HEADER_CORS = 'Access-Control-Allow-Origin'
+
+logging.basicConfig(
+    filename = settings.LOG_FILENAME
+)
 
 api = NinjaAPI(
     openapi_extra = {
@@ -28,19 +35,39 @@ def new_chat(request):
     Creates a new chat
     Return JsonResponse
     '''
-    chat = Chat.objects.create()
-    response = JsonResponse(chat.to_dict(), safe=False)
-    response[HEADER] = settings.ALLOWED_CORS_SERVERS
+    response = {
+        "error": "Nao foi possivel criar o chat"
+    }
+    try:
+        if request.method == 'POST':
+            user_id = request.POST.get('user_id', '')
+            if user_id:            
+                user = User.objects.get(pk=int(user_id))
+                chat = Chat.objects.create(user=user)
+                response = JsonResponse(chat.to_dict(), safe=False)
+    except Exception as error:
+        logging.error(str(error))    
+        response = JsonResponse(response, safe=False)
+    
+    response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
     return response
 
-@api.get('chat/list')
+@api.get('user/{user_id}/chats')
 def list_chats(request):
     '''
-    Returns a chat list
+    Returns a user's chat list
     '''
-    chats = list(Chat.objects.to_dict())
-    response = JsonResponse(chats, safe=False)
-    response[HEADER] = settings.ALLOWED_CORS_SERVERS
+    chats = {}
+    try:
+        user = User.objects.get(pk=int(user_id))        
+        chats = list(user.chats.all())
+        response = JsonResponse(chats, safe=False)
+    
+    except Exception as error:
+        logging.error(str(error))
+        response = JsonResponse({})
+    
+    response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
     return response    
 
 @api.get('chat/{id}')
@@ -51,7 +78,7 @@ def get_chat(request, id:str) -> JsonResponse:
     except:
         response = {}
     response = JsonResponse(response, safe=False)
-    response[HEADER] = settings.ALLOWED_CORS_SERVERS
+    response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
     return response
 
 
