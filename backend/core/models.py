@@ -23,6 +23,7 @@ class Chat(models.Model):
     id = models.UUIDField(primary_key=True, default=uuid4, editable=False)
     timestamp = models.FloatField(default=timezone.now().timestamp())
     objects = ChatManager()
+    user = models.ForeignKey(User, related_name='chats', null=True, blank=True, on_delete=models.CASCADE)
 
     def __str__(self):
         return "Chat"
