@@ -7,6 +7,8 @@ from ninja import NinjaAPI
 
 from core.models import Chat, Message
 
+HEADER_CORS = 'Access-Control-Allow-Origin'
+
 api = NinjaAPI(
     openapi_extra = {
         'info': {
@@ -28,7 +30,7 @@ def new_chat(request):
     '''
     chat = Chat.objects.create()
     response = JsonResponse(chat.to_dict(), safe=False)
-    response['Access-Control-Allow-Origin'] = settings.ALLOWED_CORS_SERVERS
+    response[HEADER] = settings.ALLOWED_CORS_SERVERS
     return response
 
 @api.get('chat/list')
@@ -38,9 +40,8 @@ def list_chats(request):
     '''
     chats = list(Chat.objects.to_dict())
     response = JsonResponse(chats, safe=False)
-    response['Access-Control-Allow-Origin'] = settings.ALLOWED_CORS_SERVERS
+    response[HEADER] = settings.ALLOWED_CORS_SERVERS
     return response    
-
 
 @api.get('chat/{id}')
 def get_chat(request, id:str) -> JsonResponse:
@@ -50,8 +51,8 @@ def get_chat(request, id:str) -> JsonResponse:
     except:
         response = {}
     response = JsonResponse(response, safe=False)
-    response['Access-Control-Allow-Origin'] = settings.ALLOWED_CORS_SERVERS
-    return response    
+    response[HEADER] = settings.ALLOWED_CORS_SERVERS
+    return response
 
 
 @api.get('messages/list')
@@ -65,46 +66,50 @@ def new_user(request):
     '''
     if not valid_payload(request.POST):
         return JsonResponse({})
-    new_user = {}
+    
+    _response = {}
     try:
         usuario = User.objects.get(username=request.POST.get('username'))
         if usuario:
-            return JsonResponse({
+            _response = {
                 'error': 'Usuario ja existe'
-            })
+            }
     except:
         new_user = User.objects.create(
             username=request.POST.get('username'),
             email=request.POST.get('email')
         )
+        _response = {
+            "id": new_user.id,
+            "username": new_user.username,
+            "email": new_user.email
+        }
 
 
-    return JsonResponse(
-        {
-            'id': new_user.id,
-            'username': new_user.username,
-            'e-mail': new_user.email
-        }, 
-        safe=False)
+    response = JsonResponse(
+        _response,
+        safe=False
+    )
+    response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
+    return response
 
 @api.get('user/{username}')
 def get_user(request, username):
     user = {}
     try:
-        user = User.objects.get(username=username)        
+        _user = User.objects.get(username=username)        
+        user = {
+            "id": _user.id,
+            "username": _user.username,
+            "email": _user.email
+        }    
     except User.DoesNotExist:
         user = {}
     except Exception as error:
-        print(error)
+        logging.error(str(error))        
+        user = {}    
     
-    if user:
-        return JsonResponse(
-            {
-                "id": user.id,
-                "username": user.username,
-                "email": user.email
-            },
-            safe=False
-        )
-    return JsonResponse(user)
+    response = JsonResponse(user, safe=False)
+    response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
+    return response
 

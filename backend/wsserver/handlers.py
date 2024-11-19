@@ -62,17 +62,17 @@ class MainHandler(websocket.WebSocketHandler):
         Return the connection to delivery the message
         '''
         chat_id = message.get('chat').get('id')
-        conn = [c 
+        conns = [c 
             for c in self.connections 
             if c.chat_id == chat_id
         ]
-        return conn[0] if len(conn) > 0 else []
+        return conns
 
     async def open(self, *args, **kwargs):
-        chat_id = kwargs.get('id')
+        chat_id = kwargs.get('id').replace('-', '')
         chat = await get_chat(id=chat_id)
         if not chat:
-            self.write('\{\}')
+            self.write_message('\{\}')
             return
         
         setattr(self, 'chat_id', chat_id)
@@ -81,8 +81,8 @@ class MainHandler(websocket.WebSocketHandler):
     async def on_message(self, message, *args, **kwargs):
         _message = json.loads(message)
         try:
-            conn = await self.route_message(_message)
-            if conn:                
+            conns = await self.route_message(_message)
+            for conn in conns:
                 conn.write_message(_message.get('text'))
         
         except Exception as error:
