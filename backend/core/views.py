@@ -53,14 +53,14 @@ def new_chat(request):
     return response
 
 @api.get('user/{user_id}/chats')
-def list_chats(request):
+def list_chats(request, user_id):
     '''
     Returns a user's chat list
     '''
     chats = {}
     try:
         user = User.objects.get(pk=int(user_id))        
-        chats = list(user.chats.all())
+        chats = [_c.to_dict() for _c in user.chats.all()]
         response = JsonResponse(chats, safe=False)
     
     except Exception as error:
