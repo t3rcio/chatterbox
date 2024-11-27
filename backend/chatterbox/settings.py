@@ -133,4 +133,4 @@ ALLOWED_CORS_SERVERS = '*'
 
 FORMAT_DATE = '%Y-%m-%d'
 LOG_FILES_PATH = os.path.join(BASE_DIR, '_logs')
-LOG_FILENAME = LOG_FILES_PATH + datetime.now().strftime(FORMAT_DATE) + '.log'
+LOG_FILENAME = LOG_FILES_PATH +'/'+ datetime.now().strftime(FORMAT_DATE) + '.log'

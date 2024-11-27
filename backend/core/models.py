@@ -34,9 +34,30 @@ class Chat(models.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'user': self.user.id,
             'timestamp': self.timestamp
         }
         
+class ChatUsers(models.Model):
+    '''
+    Chats and users model
+    '''
+    chat = models.ForeignKey(Chat, related_name="users", on_delete=models.CASCADE)
+    user = models.ForeignKey(User, related_name="chats_related", on_delete=models.CASCADE)
+
+    @classmethod
+    def users_list(cls, chat:Chat) -> list:
+        items = ChatUsers.objects.filter(chat__id=chat.id)
+        response = [
+            item.user
+            for item in items
+        ]
+        response.append(chat.user)
+        return response
+
+    def __repr__(self):
+        return "ChatUsers<{}>".format(self.id)
+
 
 class Message(models.Model):
     '''
