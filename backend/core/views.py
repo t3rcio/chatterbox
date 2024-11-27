@@ -8,7 +8,7 @@ from django.http import JsonResponse, HttpResponse
 
 from ninja import NinjaAPI
 
-from core.models import Chat, Message
+from core.models import Chat, Message, ChatUsers
 
 HEADER_CORS = 'Access-Control-Allow-Origin'
 
@@ -140,3 +140,35 @@ def get_user(request, username):
     response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
     return response
 
+@api.get('/chat/access/{user}/{chat_id}')
+def access_chat(request, user, chat_id):
+    response = {}
+    
+    try:
+        chat = Chat.objects.get(id=chat_id)
+        user = User.objects.get(id=int(user))
+        ChatUsers.objects.create(
+            chat=chat,
+            user=user
+        )
+        response = [{'id': u.id, 'username': u.username, 'email': u.email} for u in ChatUsers.users_list(chat)]
+    except Exception as _error:
+        logging.error(_error)
+    
+    _response = JsonResponse(response, safe=False)
+    _response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
+    return _response
+
+@api.get('/chat/{chat_id}/users')
+def access_chat(request, chat_id):
+    response = {}
+    
+    try:
+        chat = Chat.objects.get(id=chat_id)        
+        response = [{'id': u.id, 'username': u.username, 'email': u.email} for u in ChatUsers.users_list(chat)]
+    except Exception as _error:
+        logging.error(_error)
+    
+    _response = JsonResponse(response, safe=False)
+    _response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
+    return _response
