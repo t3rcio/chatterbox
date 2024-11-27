@@ -33,6 +33,7 @@ class Chat(models.Model):
     def to_dict(self):
         return {
             'id': self.id,
+            'user': self.user.id,
             'timestamp': self.timestamp
         }
         
