@@ -1,0 +1,178 @@
+.App {  
+  width: 100%;
+  margin: 0px auto;
+  border-radius: 0px;
+  padding:0px;    
+}
+
+#header {  
+  padding: 2%;
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr;  
+  box-shadow: 1px 1px 1px #ccc;
+  position:fixed;
+  top:0px;
+  left:0px;
+  width: 100%;
+  background-color: #fafafa;
+  height: 40px;
+}
+
+#header * {
+  align-items: center;  
+}
+
+#logo {
+  display: grid;
+  grid-template-columns: 1fr 1fr;  
+  gap: 0px;
+}
+
+#logo img {
+  cursor: pointer;
+}
+
+img {
+  max-width: 55%;
+}
+
+#logo span {  
+  font-size: 1.2em;
+  text-align: center;
+}
+
+#container {
+  margin-top: 1%;
+  padding-top:60px;
+  display:grid;
+  grid-template-columns: 1fr;    
+}
+
+#form-cadastro, #form-login, #form-chat {
+  margin-top:15%;  
+  text-align: center;
+}
+
+#form-cadastro h3, #form-cadastro h4 {
+  width: 100%;
+  text-align: center;
+  font-size: 1.1em;  
+}
+
+input {
+  margin:2% 4%;
+  border-radius: 10px;
+  padding:0.5%;
+  height: 35px;
+  border: solid 2px #ccc;
+  width: 90%;
+  font-size:1em;
+  text-indent: 15px;
+}
+
+.form-button {
+  text-align: center;
+  min-width: 35%;
+  padding: 1%;
+  background: #dedede;
+  border: solid 1px #ccc;
+  font-size: 0.98em;  
+}
+
+.d-none {
+  display:none;
+}
+
+#floating-button {
+  position: fixed;
+  bottom: 20px;  
+  right: 20px;
+  width: 70px;
+  height: 70px;
+  border-radius:80px;  
+  background-color: #ebe4fd;
+  box-shadow: 1px 1px 2px #ccc;
+  background-image: url('../public/assets/icons/add.png');
+  background-repeat: no-repeat;
+  background-position: center;
+  background-size: 50%;
+  cursor: pointer;
+}
+
+#modal {
+  position: absolute;
+  top:0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  background-color: #000;
+  background-color: rgba(0, 0, 0, 0.8);
+  display: none;  
+}
+
+#modal-dialog {
+  width:75%;
+  margin: 100px auto;
+  min-height: 250px;
+  padding:1%;
+  background-color: #fefefe;  
+  opacity: 1;
+  z-index: 2;
+  border-radius:6px;
+}
+
+#modal-header {
+  width: 96%;
+  height: 30px;
+  padding:2%;
+  font-weight: bold;  
+}
+
+#modal-body {
+  border-top: solid 1px #dfdfdf;
+  width: 99%;
+  height: auto;
+  padding:4% 1%;
+}
+.button-share {
+  width:96%;
+  height: 38px;
+  margin-left:2%;
+  border-radius:6px;
+  font-size: 1.25em;
+  background-color: #7765d1;
+  background-image: none;
+  color:#fff;
+  margin-top:5%;
+}
+
+.input-share {
+  margin-top:5%;
+}
+@media screen and (min-width: 768px) {
+
+  #header {
+    padding:0.75%;
+    height: 28px;
+    display: flex;
+    flex:1;
+  }
+
+  #header * {
+    align-items: flex-start;
+  }
+
+  .chatitems span {
+    margin:0.5% 4%;
+  }
+
+  #container {
+    padding-top:40px;
+  }
+
+  #modal-dialog {
+    width: 20%;
+  }
+  
+}

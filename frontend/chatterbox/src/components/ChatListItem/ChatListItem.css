@@ -1,0 +1,32 @@
+
+.chatitems {
+    padding: 0.75%;    
+    height: 40px;
+    border-bottom: solid 1px #ccc;        
+    background: url('/public/assets/icons/chatitem.png');
+    background-size: 35px;
+    background-position: 1% 50%;
+    background-repeat: no-repeat;
+}
+.chatitems:hover {
+    cursor: pointer;
+    background-color: #dedede;
+}
+.chatitems:hover span {
+    font-weight: bold;
+}
+
+
+.chatmessage {
+    margin:1.5% 10%;    
+    font-weight: normal;
+    width: 80%;
+    float:left;
+}
+
+@media screen and (min-width: 768px){
+    .chatitems {
+        height: 30px;
+    }
+    
+}
