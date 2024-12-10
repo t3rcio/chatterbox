@@ -60,7 +60,9 @@ def list_chats(request, user_id):
     chats = {}
     try:
         user = User.objects.get(pk=int(user_id))        
-        chats = [_c.to_dict() for _c in user.chats.all()]
+        chats_iniciados = [_c.to_dict() for _c in user.chats.all()]
+        chats_convidados = [cr.chat.to_dict() for cr in user.chats_related.all()]
+        chats = chats_iniciados + chats_convidados
         response = JsonResponse(chats, safe=False)
     
     except Exception as error:
