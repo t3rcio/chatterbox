@@ -1,0 +1,25 @@
+version: "3.3"
+
+services:
+  backend:
+    build: .
+    container_name: chatterbox-backend
+    restart: always
+    ports: 
+      - "8085:8085"
+      - "9000:9000"
+    networks:
+      chatterbox-net:
+        ipv4_address: 175.84.0.3
+  frontend:
+    build: frontend
+    container_name: chatterbox-frontend
+    ports:
+      - "3000:3000"
+    networks:
+      chatterbox-net:
+        ipv4_address: 175.84.0.2   
+networks:
+  chatterbox-net:
+    external: true
+
