@@ -1,5 +1,5 @@
 
-const WS_API_ROOT = 'ws://chatterbox-backend:9000';
+const WS_API_ROOT = 'ws://chatterbox.app.br:9000';
 const WS_API_CHAT = WS_API_ROOT + '/chat/';
 let connections = []
 
@@ -7,10 +7,10 @@ const onReceiveMessage = (event, onReceiveCallback) => {
     let message = JSON.parse(event.data);        
     let messages = JSON.parse(localStorage.getItem("messages"));        
     let mensagem_ja_gravada = messages.filter((e) => {
-        return e.id == message.id
+        return e.id === message.id
     });
 
-    if (mensagem_ja_gravada.length == 0){
+    if (mensagem_ja_gravada.length === 0){
         messages.push(message);
         localStorage.setItem("messages", JSON.stringify(messages));
         onReceiveCallback(messages);

@@ -62,16 +62,16 @@ const Screen = (props) => {
     let counter = 0;
     let conversa = items.map(c => {
         let _class = user.id === c.user.id ? 'sent-messages' : 'received-messages';
-        counter ++;
+        counter ++;        
         return (<>
-                <div className="messages-frame" key={c.id + String(counter)} id={c.id + String(counter)}>
-                    <div className='messages-user'></div>
-                    <div className={"messages " + `${_class}`}>
-                        <span>{c.user.username}</span>
-                        <p>
+                <div className="messages-frame" key={crypto.randomUUID()} id={c.id + String(counter)}>
+                    <div className='messages-user' key={crypto.randomUUID()}></div>
+                    <div className={"messages " + `${_class}`} key={crypto.randomUUID()}>
+                        <span key={crypto.randomUUID()}>{c.user.username}</span>
+                        <p key={crypto.randomUUID()}>
                             {c.text}
                         </p>
-                        <h6>{timestampToDateTime(c.timestamp)}</h6>
+                        <h6 key={crypto.randomUUID()}>{timestampToDateTime(c.timestamp)}</h6>
                     </div>     
                 </div>
             </>)
@@ -112,24 +112,24 @@ const Screen = (props) => {
                     </div>
                 </div>
             </div>
-            <div className="screen" id={props.chat}>
-                <div id="screen-header">
+            <div className="screen" key={crypto.randomUUID()}>
+                <div id="screen-header" key={crypto.randomUUID()}>
                     {/* <span>{props.chat}</span> */}                
-                    <button className="header-button" onClick={props.showChatsList}>
+                    <button className="header-button" onClick={props.showChatsList} key={crypto.randomUUID()}>
                         Chats
                     </button>
-                    <button className="header-button" onClick={openDialogShareBox}>
+                    <button className="header-button" onClick={openDialogShareBox} key={crypto.randomUUID()}>
                         Compartilhar
                     </button>
                 </div>            
-                <div id="screen-body">
-                    <div className="messages-container">
+                <div id="screen-body" key={crypto.randomUUID()}>
+                    <div className="messages-container" key={crypto.randomUUID()}>
                         {conversa}
                     </div>
                 </div>
-                <div className="keyboard-container">
-                    <textarea id="mensagem" placeholder="Digite sua mensagem aqui"></textarea>
-                    <Button label="" click={enviar}/>
+                <div className="keyboard-container" key={crypto.randomUUID()}>
+                    <textarea id="mensagem" placeholder="Digite sua mensagem aqui" key={crypto.randomUUID()}></textarea>
+                    <Button label="" click={enviar} key={crypto.randomUUID()}/>
                 </div>
             </div>            
         </>
