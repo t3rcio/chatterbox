@@ -52,11 +52,17 @@ img {
   margin-top:15%;  
   text-align: center;
 }
-
+#form-chat {
+  margin-top: 8%;
+}
 #form-cadastro h3, #form-cadastro h4 {
   width: 100%;
   text-align: center;
   font-size: 1.1em;  
+}
+
+#novo-chat {
+  text-align: center;
 }
 
 input {

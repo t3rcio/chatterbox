@@ -1,5 +1,5 @@
 
-const WS_API_ROOT = 'ws://localhost:9000';
+const WS_API_ROOT = 'ws://chatterbox-backend:9000';
 const WS_API_CHAT = WS_API_ROOT + '/chat/';
 let connections = []
 

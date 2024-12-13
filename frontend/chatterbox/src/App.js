@@ -1,7 +1,6 @@
 
 import React, { useState } from 'react';
 import './App.css';
-import Button from './components/Button';
 import ChatListItem from './components/ChatListItem';
 import RestAPI from './components/RestAPI';
 import Screen from './components/Screen';
@@ -41,8 +40,8 @@ const App = () => {
   const createUser= (event) => {
     event.preventDefault();
     let form = document.getElementById('form-cadastro');
-    let username = form.elements[0].value;
-    let email = form.elements[1].value;
+    let username = form.elements[1].value;
+    let email = form.elements[0].value;
     let data = new FormData()
     data.append('username', username);
     data.append('email', email);
@@ -50,10 +49,13 @@ const App = () => {
     api.create_user(data).then((user) => {
       localStorage.setItem("user", JSON.stringify(user));
     }).catch((data) => console.log(data));
+    setScreen("NEWCHAT");
   }
 
   const iniciarNovoChat = (event) => {
-    let data = new FormData()    
+    let data = new FormData()
+    let user = JSON.parse(localStorage.getItem("user")); 
+    let chats_collection = JSON.parse(localStorage.getItem("chats_collection"));
     data.append('user_id', user.id)
     let api = new RestAPI();
     api.create_chat(data).then((chat) => {
@@ -68,6 +70,7 @@ const App = () => {
       chats_collection.push(chat);
       let _chat_collection = JSON.stringify(chats_collection);
       localStorage.setItem('chats_collection', _chat_collection);      
+      localStorage.setItem('currentChat', chat.id);
       setScreen("CURRENTCHAT");
     }).catch((data) => {
       console.error(data);
@@ -88,6 +91,7 @@ const App = () => {
 
   const acessSharedChat = (event) => {
     let chat_id = document.getElementById("input-chat-id-shared").value;
+    let user = JSON.parse(localStorage.getItem("user"));
     if (Boolean(chat_id)){
       api.acess_chat(user.id, chat_id)
       .then((result) => {
@@ -104,6 +108,7 @@ const App = () => {
   const accessChat = (event) => {
     event.preventDefault();
     let chat_id = event.target.elements[0].value;
+    let user = JSON.parse(localStorage.getItem("user"));
     if (Boolean(chat_id)){
       api.acess_chat(user.id, chat_id)
       .then((result) => {
@@ -240,13 +245,18 @@ const App = () => {
     case "NEWCHAT":
       component = 
       <>
-        <Button click={iniciarNovoChat} label="Iniciar chat"/>
+      <div id="novo-chat">
+        <h2>
+          Comece a conversar no Chatterbox
+        </h2>
+        <button onClick={iniciarNovoChat} className='form-button'>Novo chat</button>        
         <hr/>
-        <span>Ou cole um código de conversa recebido</span>
         <form id="form-chat" onSubmit={accessChat} >
+            <h3>Ou cole um código de conversa recebido</h3>
             <input type="text" name="chat_id" placeholder="Cole o codigo da conversa aqui" defaultChecked={''} />
-            <button type="submit">Conversar</button>
-        </form>    
+            <button type="submit" className="form-button">Acessar chat</button>
+        </form>
+      </div>
       </>
       break;
     default:      
