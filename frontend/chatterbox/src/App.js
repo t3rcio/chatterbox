@@ -62,10 +62,7 @@ const App = () => {
       
       if([undefined, null].indexOf(chats_collection) > -1){
         chats_collection = [];
-      }
-      else {
-        chats_collection = JSON.parse(localStorage.getItem('chats_collection'));
-      }        
+      }       
        
       chats_collection.push(chat);
       let _chat_collection = JSON.stringify(chats_collection);
@@ -80,13 +77,16 @@ const App = () => {
   const getUser = (event) => {
     event.preventDefault();
     let username = event.target.elements[0].value;
+    let _screen = "ERROR";
     api.get_user(username)
     .then((result) => {
-      localStorage.setItem("user", JSON.stringify(result));
-      getUserChats();
-      setScreen("CHATSLIST");
+      if (Object.keys(result).length > 0){
+        localStorage.setItem("user", JSON.stringify(result));
+        getUserChats();                
+        setScreen("CHATSLIST");
+      }
     })
-
+    setScreen(_screen);
   }
 
   const acessSharedChat = (event) => {
@@ -159,9 +159,13 @@ const App = () => {
     }
   }
 
-  if (Boolean(user)){
+  const tenteNovamente = (event) => {
+    setScreen("LOGIN");
+  }
+
+  if ([undefined, null].indexOf(user) < 0){
     getUserChats();    
-    if (Boolean(chats_collection)){
+    if (chats_collection.length > 0){
       init = "CHATSLIST";
     }
     else {
@@ -257,6 +261,18 @@ const App = () => {
             <button type="submit" className="form-button">Acessar chat</button>
         </form>
       </div>
+      </>
+      break;
+    case "ERROR":
+      component = 
+      <>
+        <div id="error">
+          <img src="assets/images/sad.png" width="64" alt="sad.png" title="Ocorreu um erro" />
+          <h2>Erro ao obter os dados. Verifique sua conexão com a internet ou tente novamente</h2>
+          <button className='form-button'onClick={tenteNovamente}>
+            Tentar novamente
+          </button>
+        </div>
       </>
       break;
     default:      
