@@ -2,7 +2,7 @@
 const PORT = '8000';
 
 class RestAPI {
-    static API_ROOT = "http://175.84.0.3:" + PORT +"/api/";
+    static API_ROOT = "http://chatterbox-backend:" + PORT +"/api/";    
     static API_CREATE_CHAT = RestAPI.API_ROOT + "chat/new";
     static API_CADASTRA_USUARIO = RestAPI.API_ROOT + "users/new";
     static API_OBTEM_USUARIO = RestAPI.API_ROOT + "user/";
