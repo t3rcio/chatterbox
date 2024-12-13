@@ -40,7 +40,7 @@ const App = () => {
 
   const createUser= (event) => {
     event.preventDefault();
-    let form = document.getElementById('form');
+    let form = document.getElementById('form-cadastro');
     let username = form.elements[0].value;
     let email = form.elements[1].value;
     let data = new FormData()
@@ -193,6 +193,7 @@ const App = () => {
     case "CHATSLIST":
       let items = [];
       let counter = 0;
+      chats_collection = JSON.parse(localStorage.getItem('chats_collection'));
       if (chats_collection.length > 0){
         items = chats_collection.map((c) => {
           let last_message = get_chat_last_message(c.id) || 'Sem messagens';
