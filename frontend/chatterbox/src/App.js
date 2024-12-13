@@ -33,6 +33,7 @@ const App = () => {
       let __chats = JSON.stringify(_result);
       localStorage.setItem('chats_collection', __chats);
       chats_collection = _result;      
+      setScreen("CHATSLIST");
     })
     .catch((data) => console.error(data));
   }
@@ -77,16 +78,15 @@ const App = () => {
   const getUser = (event) => {
     event.preventDefault();
     let username = event.target.elements[0].value;
-    let _screen = "ERROR";
     api.get_user(username)
     .then((result) => {
       if (Object.keys(result).length > 0){
         localStorage.setItem("user", JSON.stringify(result));
-        getUserChats();                
-        setScreen("CHATSLIST");
+        user = result;
+        getUserChats();
       }
     })
-    setScreen(_screen);
+    setScreen("ERROR");
   }
 
   const acessSharedChat = (event) => {
@@ -203,6 +203,9 @@ const App = () => {
       let items = [];
       let counter = 0;
       chats_collection = JSON.parse(localStorage.getItem('chats_collection'));
+      if([undefined, null].indexOf(chats_collection) > -1){
+        chats_collection = [];
+      }
       if (chats_collection.length > 0){
         items = chats_collection.map((c) => {
           let last_message = get_chat_last_message(c.id) || 'Sem messagens';
