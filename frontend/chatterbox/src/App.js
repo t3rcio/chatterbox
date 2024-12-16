@@ -1,5 +1,5 @@
 
-import React, { useState } from 'react';
+import React, { useEffect, useState } from 'react';
 import './App.css';
 import ChatListItem from './components/ChatListItem';
 import RestAPI from './components/RestAPI';
@@ -8,34 +8,48 @@ import Screen from './components/Screen';
 const App = () => {
   
   const LIMIT_SIZE_TEXT = 32;
+  const LOADING_MAX_TIME = 2000;
   let api = new RestAPI();
   localStorage.setItem('wsStatus', 'DISCONNECTED');
   let user = JSON.parse(localStorage.getItem('user'));
   let init = "CADASTRO";
-  let chats_collection = JSON.parse(localStorage.getItem('chats_collection'));  
+  let chats_collection = JSON.parse(localStorage.getItem('chats_collection'));
   let component = <></>  
   let messages = JSON.parse(localStorage.getItem("messages"));
+
+  useEffect(() => {
+    if (screen === "LOADING_CHATS"){
+      setTimeout(()=> {
+        setScreen("CHATSLIST");
+      }, LOADING_MAX_TIME);
+    }
+  })
+
   if (messages == null){
     localStorage.setItem("messages", JSON.stringify([]));
   }
   
-  if (chats_collection == null){
+  if (chats_collection === null){
     chats_collection = [];
   }
   
   const getUserChats = () =>{
+    let result = []
     if ([undefined, null].indexOf(user) > -1){      
-      return []
+      return result;
     }
 
     api.get_user_chats(user)
     .then((_result) => {
       let __chats = JSON.stringify(_result);
-      localStorage.setItem('chats_collection', __chats);
-      chats_collection = _result;      
-      setScreen("CHATSLIST");
+      if(_result.length > 0){
+        chats_collection = _result;
+        result = _result;
+        localStorage.setItem('chats_collection', __chats);
+      }
     })
     .catch((data) => console.error(data));
+    return result;
   }
 
   const createUser= (event) => {
@@ -78,15 +92,20 @@ const App = () => {
   const getUser = (event) => {
     event.preventDefault();
     let username = event.target.elements[0].value;
-    api.get_user(username)
-    .then((result) => {
-      if (Object.keys(result).length > 0){
-        localStorage.setItem("user", JSON.stringify(result));
-        user = result;
-        getUserChats();
-      }
-    })
-    setScreen("ERROR");
+    if(Boolean(username)){
+      api.get_user(username)
+      .then((result) => {
+        if (Object.keys(result).length > 0){
+          localStorage.setItem("user", JSON.stringify(result));
+          user = result;
+          chats_collection = getUserChats();
+          setScreen("LOADING_CHATS");
+        }
+      })
+    }
+    else {
+      window.alert("Informe o usuário.")
+    }
   }
 
   const acessSharedChat = (event) => {
@@ -164,7 +183,6 @@ const App = () => {
   }
 
   if ([undefined, null].indexOf(user) < 0){
-    getUserChats();    
     if (chats_collection.length > 0){
       init = "CHATSLIST";
     }
@@ -199,12 +217,21 @@ const App = () => {
                       <button type='submit' className='form-button'>Acessar</button>
                   </form>
       break;
+    case "LOADING_CHATS":
+      component = <>
+                    <div id="loading-chats">
+                      <img src="/assets/icons/loading.gif"/>
+                      <span>Carregando chats...</span>
+                    </div>
+                  </>
+      break;
     case "CHATSLIST":
       let items = [];
       let counter = 0;
-      chats_collection = JSON.parse(localStorage.getItem('chats_collection'));
-      if([undefined, null].indexOf(chats_collection) > -1){
-        chats_collection = [];
+      getUserChats();
+      chats_collection = JSON.parse(localStorage.getItem("chats_collection"));
+      if (chats_collection === null) {
+        setScreen("LOADING_CHATS");
       }
       if (chats_collection.length > 0){
         items = chats_collection.map((c) => {
