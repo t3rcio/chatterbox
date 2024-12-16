@@ -112,6 +112,28 @@ input {
   cursor: pointer;
 }
 
+#loading-chats {
+  position: absolute;
+  top:0;
+  left:0;
+  width: 100%;
+  height: 100%;
+  z-index:2;
+  background-color: #fff;
+  text-align: center;
+}
+
+#loading-chats img {
+  width: 30%;
+}
+
+#loading-chats span {
+  width: 100%;
+  margin-top:5%;
+  text-align: center;
+  float: left;
+}
+
 #modal {
   position: absolute;
   top:0;
