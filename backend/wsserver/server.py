@@ -3,6 +3,7 @@
 import asyncio
 import django
 import os
+import ssl 
 import sys
 import tornado
 import tornado.ioloop
@@ -37,11 +38,17 @@ os.environ['DJANGO_SETTINGS_MODULE'] = 'chatterbox.settings'
 django.setup()
 
 from django.conf import settings
-from wsserver import urls
+from wsserver import urls, settings as wsserver_settings
 
 async def main(port=8000):
     app = tornado.web.Application(urls.route_table, debug=settings.DEBUG)
     http_server = tornado.httpserver.HTTPServer(app)
+    
+    config_dict = getattr(wsserver_settings, "SSL", {})
+    if config_dict:
+        ssl_options = dict(certfile=config_dict.get("certfile"), keyfile=config_dict.get("keyfile"))
+        http_server = tornado.httpserver.HTTPServer(app, ssl_options=ssl_options)
+    
     if settings.DEBUG:
         print("Server running... listening " + str(port))
     
