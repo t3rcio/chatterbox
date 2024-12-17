@@ -21,7 +21,7 @@ SSL = {
 
 if not DEBUG:
     SSL = {
-        'certfile':'/etc/letsencrypt/live/chatterbox.app.br/fullchain.pem',
-        'keyfile': '/etc/letsencrypt/live/chatterbox.app.br/privkey.pem',
+        'certfile': os.path.join(BACKEND_DIR, 'fullchain.pem'),
+        'keyfile': os.path.join(BACKEND_DIR, 'privkey.pem'),
     }
 
