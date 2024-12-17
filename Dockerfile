@@ -4,6 +4,7 @@ ENV PYTHONUNBUFFERED=1
 
 RUN apt-get update && apt-get install -y supervisor && apt-get install nano -y
 RUN mkdir -p /var/log/supervisor
+RUN mkdir _logs
 
 WORKDIR /code
 COPY backend/ /code/
