@@ -1,8 +1,9 @@
 
 const PORT = '8000';
+let PROTOCOL = process.env.REACT_APP_HTTPS == 'true' ? "https" : "http";
 
 class RestAPI {
-    static API_ROOT = "http://chatterbox.app.br:" + PORT +"/api/";    
+    static API_ROOT = PROTOCOL + "://chatterbox.app.br:" + PORT +"/api/";    
     static API_CREATE_CHAT = RestAPI.API_ROOT + "chat/new";
     static API_CADASTRA_USUARIO = RestAPI.API_ROOT + "users/new";
     static API_OBTEM_USUARIO = RestAPI.API_ROOT + "user/";

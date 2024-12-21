@@ -1,5 +1,6 @@
 
-const WS_API_ROOT = 'ws://chatterbox.app.br:9000';
+let PROTOCOL = process.env.REACT_APP_HTTPS == 'true' ? "wss" : "ws";
+const WS_API_ROOT = PROTOCOL +'://chatterbox.app.br:9000';
 const WS_API_CHAT = WS_API_ROOT + '/chat/';
 let connections = []
 
