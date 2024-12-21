@@ -15,8 +15,8 @@ LOG_FILES_PATH = str(BACKEND_DIR) + '/_logs/'
 LOG_FILENAME = LOG_FILES_PATH + datetime.now().strftime(FORMAT_DATE) + '.log'
 
 SSL = {
-    'certfile': os.path.join(BACKEND_DIR, 'certFile.pem'),
-    'keyfile': os.path.join(BACKEND_DIR, 'privateKey.pem'),
+    'certfile': os.path.join(BACKEND_DIR, 'fullchain.pem'),
+    'keyfile': os.path.join(BACKEND_DIR, 'privkey.pem'),
 }
 
 if not DEBUG:
