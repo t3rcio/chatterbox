@@ -149,10 +149,12 @@ def access_chat(request, user, chat_id):
     try:
         chat = Chat.objects.get(id=chat_id)
         user = User.objects.get(id=int(user))
-        ChatUsers.objects.create(
-            chat=chat,
-            user=user
-        )
+        user_chat = ChatUsers.objects.filter(user=user).exists()
+        if not user_chat:
+            ChatUsers.objects.create(
+                chat=chat,
+                user=user
+            )
         response = [{'id': u.id, 'username': u.username, 'email': u.email} for u in ChatUsers.users_list(chat)]
     except Exception as _error:
         logging.error(_error)
