@@ -18,10 +18,53 @@
 
 
 .chatmessage {
-    margin:1.5% 10%;    
+    margin:3% 12%;    
     font-weight: normal;
     width: 80%;
     float:left;
+}
+
+.chatitems-label {
+    float:left;
+    min-width: 80%;
+    height: 30px;    
+}
+
+.chatitems-options {    
+    float: right;    
+    width: 30px;
+    height: 30px;
+    background-image: url('/public/assets/icons/dots.png');
+    background-size: 50%;
+    background-repeat: no-repeat;
+    background-position: center;
+    background-color: transparent;
+}
+
+.chatitems-menumodal {
+    position: fixed; 
+    float:right;    
+    left:70%;
+    margin-top:-5%;
+    width: 100px;
+    min-height: 28px;
+    border-radius:8px;
+    z-index: 10000;
+    background-color: #fff;
+    display: none;
+    padding:1%;
+    box-shadow: 1px 1px 1px #ccc;
+    border: solid 1px #ccc;
+}
+
+span.chatitems-menumodal-item {
+    float:left;
+    width: 98%;
+    padding: 1%;
+    height: 20px;
+    line-height: 22px;
+    font-size: 13px;  
+    text-align: left;    
 }
 
 @media screen and (min-width: 768px){

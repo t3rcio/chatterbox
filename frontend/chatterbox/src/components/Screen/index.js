@@ -121,6 +121,9 @@ const Screen = (props) => {
                     <button className="header-button" onClick={openDialogShareBox} key={crypto.randomUUID()}>
                         Compartilhar
                     </button>
+                    <button className="header-button" onClick={openDialogShareBox} key={crypto.randomUUID()}>
+                        Excluir
+                    </button>                    
                 </div>            
                 <div id="screen-body" key={crypto.randomUUID()}>
                     <div className="messages-container" key={crypto.randomUUID()}>

@@ -182,6 +182,10 @@ const App = () => {
     setScreen("LOGIN");
   }
 
+  const onDeleteChat = (event) => {
+    setScreen("LOADING_CHATS");
+  }
+
   if ([undefined, null].indexOf(user) < 0){
     if (chats_collection.length > 0){
       init = "CHATSLIST";
@@ -237,7 +241,7 @@ const App = () => {
         items = chats_collection.map((c) => {
           let last_message = get_chat_last_message(c.id) || 'Sem messagens';
           counter ++;
-          return <ChatListItem id={c.id} key={c.id + String(counter)} chat_id={c.id} click={openChat} last_message={last_message} />
+          return <ChatListItem id={c.id} key={c.id + String(counter)} chat_id={c.id} click={openChat} last_message={last_message} onDelete={onDeleteChat} />
         });
         
         component = <>
