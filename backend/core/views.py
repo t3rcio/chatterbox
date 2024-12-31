@@ -176,3 +176,29 @@ def access_chat(request, chat_id):
     _response = JsonResponse(response, safe=False)
     _response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
     return _response
+
+@api.api_operation(["DELETE", "OPTIONS"], '/chat/{user_id}/{chat_id}')
+def remove_chat_user(request, user_id, chat_id):
+    '''
+    https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
+    '''
+    if request.method == "OPTIONS":
+        response = HttpResponse(content="")
+        response["Allow"] = "OPTIONS, DELETE"
+        return response    
+    
+    response = {}    
+    
+    try:
+        chat = Chat.objects.get(id=chat_id)
+        user = User.objects.get(id=int(user_id))
+        user_chat = ChatUsers.objects.filter(user=user, chat=chat)
+        if user_chat.exists():
+            user_chat.delete()
+        response = [{'id': u.id, 'username': u.username, 'email': u.email} for u in ChatUsers.users_list(chat)]        
+    except Exception as _error:
+        logging.error(_error)
+    
+    _response = JsonResponse(response, safe=False)
+    _response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
+    return _response

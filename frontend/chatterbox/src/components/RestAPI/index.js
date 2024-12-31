@@ -9,6 +9,7 @@ class RestAPI {
     static API_OBTEM_USUARIO = RestAPI.API_ROOT + "user/";
     static API_ACCESS_CHAT = RestAPI.API_ROOT + "chat/access/";
     static API_CHAT_USERS = RestAPI.API_ROOT + "chat/";
+    static API_DELETE_CHAT = RestAPI.API_ROOT + "chat/";
     //API_OBTEM_CHATS_USUARIO = API_ROOT + `users/${user_id}/chats`
 
     create_chat = (form_data) => {
@@ -67,6 +68,17 @@ class RestAPI {
     users_chat = (chat_id) => {
         return new Promise((resolve, reject) => {
             fetch(RestAPI.API_CHAT_USERS + chat_id + '/users')
+            .then(response => response.json())
+            .then(result => resolve(result))
+            .catch(data => reject(data));
+        })
+    }
+
+    delete_chat = (user_id, chat_id) => {
+        return new Promise((resolve, reject) => {
+            fetch(RestAPI.API_DELETE_CHAT + user_id + "/" + chat_id, {
+                method: 'DELETE'
+            })
             .then(response => response.json())
             .then(result => resolve(result))
             .catch(data => reject(data));

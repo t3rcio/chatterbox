@@ -182,6 +182,10 @@ const App = () => {
     setScreen("LOGIN");
   }
 
+  const onDeleteChat = (event) => {
+    setScreen("LOADING_CHATS");
+  }
+
   if ([undefined, null].indexOf(user) < 0){
     if (chats_collection.length > 0){
       init = "CHATSLIST";
@@ -215,6 +219,10 @@ const App = () => {
                       <h3>ChatterBox - Login</h3>
                       <input type="text" name="username" placeholder="Digite seu usuário" defaultValue={''}/>
                       <button type='submit' className='form-button'>Acessar</button>
+                      <hr/>
+                      <button type='button' className='form-button'onClick={event => {setScreen("CADASTRO")}}>
+                        Voltar
+                      </button>                      
                   </form>
       break;
     case "LOADING_CHATS":
@@ -237,7 +245,7 @@ const App = () => {
         items = chats_collection.map((c) => {
           let last_message = get_chat_last_message(c.id) || 'Sem messagens';
           counter ++;
-          return <ChatListItem id={c.id} key={c.id + String(counter)} chat_id={c.id} click={openChat} last_message={last_message} />
+          return <ChatListItem id={c.id} key={c.id + String(counter)} chat_id={c.id} click={openChat} last_message={last_message} onDelete={onDeleteChat} />
         });
         
         component = <>

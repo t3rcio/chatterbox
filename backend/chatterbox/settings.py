@@ -130,7 +130,10 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Chatterbox
-ALLOWED_CORS_SERVERS = '*'
+ALLOWED_CORS_SERVERS = '*, chatterbox.app.br'
+
+if not DEBUG:
+    ALLOWED_CORS_SERVERS = 'localhost, chatterbox.app.br'
 
 FORMAT_DATE = '%Y-%m-%d'
 LOG_FILES_PATH = os.path.join(BASE_DIR, '_logs')
