@@ -177,8 +177,16 @@ def access_chat(request, chat_id):
     _response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
     return _response
 
-@api.delete('/chat/{user_id}/{chat_id}')
+@api.api_operation(["DELETE", "OPTIONS"], '/chat/{user_id}/{chat_id}')
 def remove_chat_user(request, user_id, chat_id):
+    '''
+    https://developer.mozilla.org/en-US/docs/Web/HTTP/Methods/OPTIONS
+    '''
+    if request.method == "OPTIONS":
+        response = HttpResponse(content="")
+        response["Allow"] = "OPTIONS, DELETE"
+        return response    
+    
     response = {}    
     
     try:
