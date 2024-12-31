@@ -33,12 +33,41 @@
 }
 
 img {
-  max-width: 55%;
+  max-width: 65%;
 }
 
-#logo span {  
-  font-size: 1.2em;
-  text-align: center;
+#header span {  
+  line-height: 40px;;
+  font-size: 1.3em;
+  text-align: left;
+}
+
+#app-options {
+  width: 100%;  
+  background-image: url('/public/assets/icons/dots.png');
+  background-size: 15%;
+  background-repeat: no-repeat;
+  background-position-x: 85%;
+  background-position-y: center;
+  background-color: transparent;  
+}
+
+#app-options-menumodal {
+  position: fixed;
+  top:3%;
+  right: 3%;
+  width: 180px;
+  min-height: 30px;
+  background-color: #fff;
+  border:solid 1px #ccc;
+  border-radius: 6px;
+  box-shadow: 1px 1px #ccc;
+  padding:2%;
+  display: none;
+}
+
+#app-options-menumodal span {
+  font-size: 16px;
 }
 
 #container {
@@ -209,5 +238,46 @@ input {
   #modal-dialog {
     width: 20%;
   }
+
+  #header img {
+    max-width: 32%;
+  }
+  
+  #header span {  
+    line-height: 40px;;
+    font-size: 1.6em;
+    text-align: left;
+  }
+  
+  #app-options {
+    width: 100%;  
+    background-image: url('/public/assets/icons/dots.png');
+    background-size: 1.5%;
+    background-repeat: no-repeat;
+    background-position-x: 85%;
+    background-position-y: center;
+    background-color: transparent;  
+  }
+  
+  #app-options-menumodal {
+    position: fixed;
+    top:3%;
+    right: 14%;
+    width: 180px;
+    min-height: 15px;
+    background-color: #fff;
+    border:solid 1px #ccc;
+    border-radius: 6px;
+    box-shadow: 1px 1px #ccc;
+    padding:0.5%;
+    display: none;
+  }
+  
+  #app-options-menumodal span {
+    float:left;
+    font-size: 16px;
+    cursor: pointer;
+    width: 100%;
+  }  
   
 }

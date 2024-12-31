@@ -219,6 +219,10 @@ const App = () => {
                       <h3>ChatterBox - Login</h3>
                       <input type="text" name="username" placeholder="Digite seu usuário" defaultValue={''}/>
                       <button type='submit' className='form-button'>Acessar</button>
+                      <hr/>
+                      <button type='button' className='form-button'onClick={event => {setScreen("CADASTRO")}}>
+                        Voltar
+                      </button>                      
                   </form>
       break;
     case "LOADING_CHATS":

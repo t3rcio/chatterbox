@@ -26,18 +26,43 @@ const openMenu = () => {
   }
 }
 
+const openMenuOptionsModal = (event) => {
+  event.stopPropagation();
+  event.preventDefault();  
+  document.getElementById("app-options-menumodal").style.display = 'block';
+}
+
+const logoff = (event) => {
+  event.stopPropagation();
+  event.preventDefault();  
+  localStorage.clear();
+  document.getElementById("app-options-menumodal").style.display = 'none';
+}
+
+const closeModals = (event) => {
+  event.stopPropagation();
+  event.preventDefault();
+  let modais = Array.from(document.getElementsByClassName('menumodal'));
+  modais.forEach(m => {
+    m.style.display = 'none';
+  })
+}
+
 
 root.render(
   <React.StrictMode>
-    <div className="App">
+    <div className="App" onClick={closeModals}>
       <header id="header">
         <div id="logo">
           <img src="assets/icons/logo.png" alt="logo" title="Chatterbox" onClick={openMenu}/>
-          <span>
-            ChatterBox
-          </span>          
         </div>
-        <div id="appname">
+        <span>
+          ChatterBox
+        </span>
+        <div id="app-options" onClick={openMenuOptionsModal}>
+          <div className='menumodal' id="app-options-menumodal">
+            <span onClick={logoff}>Sair</span>
+          </div>
         </div>
       </header>
       <div id="container">       

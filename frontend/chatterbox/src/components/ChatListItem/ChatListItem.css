@@ -65,11 +65,19 @@ span.chatitems-menumodal-item {
     line-height: 22px;
     font-size: 13px;  
     text-align: left;    
+    cursor: pointer;
 }
 
 @media screen and (min-width: 768px){
     .chatitems {
         height: 30px;
     }
-    
+    .chatitems-menumodal {        
+        left:92%;
+        min-height: 18px;
+    }
+    .chatitems-menumodal-item {
+        line-height: 20px;
+        font-size: 14px;
+    }
 }
