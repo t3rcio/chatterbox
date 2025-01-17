@@ -33,7 +33,7 @@
 }
 
 img {
-  max-width: 65%;
+  max-width: 58%;
 }
 
 #header span {  
@@ -56,7 +56,7 @@ img {
   position: fixed;
   top:3%;
   right: 3%;
-  width: 180px;
+  width: 165px;
   min-height: 30px;
   background-color: #fff;
   border:solid 1px #ccc;
@@ -64,10 +64,12 @@ img {
   box-shadow: 1px 1px #ccc;
   padding:2%;
   display: none;
+  cursor: pointer;
 }
 
 #app-options-menumodal span {
   font-size: 16px;
+  cursor: pointer;
 }
 
 #container {
@@ -228,7 +230,7 @@ input {
   }
 
   .chatitems span {
-    margin:0.5% 4%;
+    margin:0.5% 4.8%;
   }
 
   #container {
@@ -254,15 +256,16 @@ input {
     background-image: url('/public/assets/icons/dots.png');
     background-size: 1.5%;
     background-repeat: no-repeat;
-    background-position-x: 85%;
+    background-position-x: 96%;
     background-position-y: center;
-    background-color: transparent;  
+    background-color: transparent; 
+    cursor: pointer;
   }
   
   #app-options-menumodal {
     position: fixed;
     top:3%;
-    right: 14%;
+    right: 4%;
     width: 180px;
     min-height: 15px;
     background-color: #fff;
