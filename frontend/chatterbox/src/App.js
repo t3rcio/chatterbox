@@ -5,7 +5,7 @@ import ChatListItem from './components/ChatListItem';
 import RestAPI from './components/RestAPI';
 import Screen from './components/Screen';
 
-const App = () => {
+const App = (props) => {
   
   const LIMIT_SIZE_TEXT = 32;
   const LOADING_MAX_TIME = 2000;
@@ -18,7 +18,7 @@ const App = () => {
   let messages = JSON.parse(localStorage.getItem("messages"));
 
   useEffect(() => {
-    if (screen === "LOADING_CHATS"){
+    if (screen === "LOADING_CHATS") {
       setTimeout(()=> {
         setScreen("CHATSLIST");
       }, LOADING_MAX_TIME);
@@ -52,8 +52,7 @@ const App = () => {
     return result;
   }
 
-  const createUser= (event) => {
-    event.preventDefault();
+  const createUser= () => {    
     let form = document.getElementById('form-cadastro');
     let username = form.elements[1].value;
     let email = form.elements[0].value;
@@ -89,9 +88,9 @@ const App = () => {
     })    
   }  
 
-  const getUser = (event) => {
-    event.preventDefault();
-    let username = event.target.elements[0].value;
+  const getUser = () => {
+    let _form = document.getElementById('form-login');
+    let username = _form.elements[0].value;
     if(Boolean(username)){
       api.get_user(username)
       .then((result) => {
@@ -195,6 +194,7 @@ const App = () => {
     }
   }
   else {
+    init = "LOGIN";
     localStorage.setItem("currentChat", "");
   }
 
@@ -202,23 +202,23 @@ const App = () => {
   
   switch(screen) {
     case "CADASTRO":
-      component = <form id="form-cadastro" onSubmit={createUser}>
+      component = <form id="form-cadastro">
                       <h3>
                         Acesse o Chatterbox
                       </h3>
                       <input type="text" placeholder="Digite seu email" required name="username" defaultValue={''}/>
                       <input type="text" placeholder="Digite um usuário" required name="email" defaultValue={''}/>
-                      <button type='submit' className='form-button'>Criar conta</button>
+                      <button type='button' onClick={createUser} className='form-button'>Criar conta</button>
                       <hr/>
                       <h3>Já tem uma conta? Faça seu login</h3>
                       <button className='form-button' onClick={_login}>Login</button>                      
                   </form>
       break;
     case "LOGIN":
-      component = <form id="form-login" onSubmit={getUser}>
+      component = <form id="form-login">
                       <h3>ChatterBox - Login</h3>
                       <input type="text" name="username" placeholder="Digite seu usuário" defaultValue={''}/>
-                      <button type='submit' className='form-button'>Acessar</button>
+                      <button type='button' onClick={getUser} className='form-button'>Acessar</button>
                       <hr/>
                       <button type='button' className='form-button'onClick={event => {setScreen("CADASTRO")}}>
                         Voltar
@@ -233,7 +233,21 @@ const App = () => {
                     </div>
                   </>
       break;
+    case "WAITING":
+      component = <>
+                    <div id="loading-chats">
+                      <img src="/assets/icons/loading.gif"/>
+                      <span>Aguarde...</span>
+                    </div>
+                  </>
+      break;
     case "CHATSLIST":
+      let forcedScreen = Boolean(props.screen);
+      if (forcedScreen){        
+        setScreen(props.screen);
+        break;
+      }
+
       let items = [];
       let counter = 0;
       getUserChats();
