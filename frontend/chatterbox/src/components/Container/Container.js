@@ -42,10 +42,10 @@ const Container = () => {
     
     const logoff = (event) => {
         event.stopPropagation();
-        event.preventDefault();  
-        STORAGE_KEYS.map(key => {
+        event.preventDefault();
+        STORAGE_KEYS.forEach(key => {
             localStorage.removeItem(key);
-        });
+        })
         document.getElementById("app-options-menumodal").style.display = 'none';
         setScreen("LOGIN");
     }
