@@ -1,5 +1,6 @@
 
 import {Socket, connections, onReceiveMessage} from '../Socket';
+import S3Service from '../S3Service';
 import Button from '../Button';
 import "./Screen.css";
 import { useEffect, useState } from 'react';
@@ -9,6 +10,7 @@ const Screen = (props) => {
     let user = JSON.parse(localStorage.getItem("user"));
     let messages = JSON.parse(localStorage.getItem("messages"));
     const [conversation, setConversation] = useState(messages);
+    let s3Service = new S3Service();
     
     useEffect(() => {
         let mensagens = document.getElementsByClassName('messages-frame');
@@ -33,6 +35,8 @@ const Screen = (props) => {
         },
         "text": "",
         "blob": "",
+        "url": "",
+        "type": "",
         "user": {
             "id": user.id,
             "username": user.username || user.email
@@ -62,7 +66,52 @@ const Screen = (props) => {
     let counter = 0;
     let conversa = items.map(c => {
         let _class = user.id === c.user.id ? 'sent-messages' : 'received-messages';
-        counter ++;        
+        counter ++;
+        if (c.blob){
+            let _midia = <></>
+            if (c.type.indexOf("video") > -1){
+                _midia = <>
+                    <video controls width="250">
+                        <source src={c.url} type={c.type} />
+                        Download the
+                        <a href={c.url}>video</a>                        
+                    </video>
+                </>
+            }
+            else if (c.type.indexOf("image") > -1) {
+                _midia = <>
+                    <img src={c.url} alt={c.url}/>
+                </>
+            }
+            else if (c.type.indexOf("pdf") > -1){
+                _midia = <>
+                    <a href={c.url}>
+                        <img src="assets/images/pdf.png" alt="Arquivo PDF"/>
+                    </a>
+                </>
+            }
+            else {                
+                _midia = <>
+                    <a href={c.url}>
+                        <img src="assets/images/fileunknow.png" alt="Arquivo desconhecido"/>
+                    </a>
+                </>
+            }
+            return (
+            <>
+                <div className="messages-frame" key={crypto.randomUUID()} id={c.id + String(counter)}>
+                    <div className='messages-user' key={crypto.randomUUID()}></div>
+                    <div className={"messages " + `${_class}`} key={crypto.randomUUID()}>
+                        <span key={crypto.randomUUID()}>{c.user.username}</span>
+                        <div className="img-frame">
+                            {_midia}
+                        </div>
+                        <h6 key={crypto.randomUUID()}>{timestampToDateTime(c.timestamp)}</h6>
+                    </div>     
+                </div>
+            </>                
+            )
+        }
         return (<>
                 <div className="messages-frame" key={crypto.randomUUID()} id={c.id + String(counter)}>
                     <div className='messages-user' key={crypto.randomUUID()}></div>
@@ -95,6 +144,27 @@ const Screen = (props) => {
         if (event.target.id === 'modal' || event.target.id === 'close-modal'){
             document.getElementById("modal").style.display = 'none';
         }
+    }
+    
+    const openFileSelectorDialog = (event) => {
+        let uploadField = document.getElementById("uploadField");
+        uploadField.click();
+    }
+
+    const upload = (event) => {
+        let uploadField = event.target;
+        let files = uploadField.files;        
+        let reader = new FileReader();        
+        reader.onload = function (evt) {
+            s3Service.upload(files[0].name, evt.target.result).then(url => {
+                let __message = Message;
+                __message.blob = true;
+                __message.type = files[0].type;
+                __message.url = url;
+                websocket.send(JSON.stringify(__message));                
+            }).catch(err => console.log(err));
+        }
+        reader.readAsArrayBuffer(files[0]);
     }
 
     localStorage.setItem("menu-current-chat", "hidden");
@@ -132,7 +202,9 @@ const Screen = (props) => {
                 </div>
                 <div className="keyboard-container" key={crypto.randomUUID()}>
                     <textarea id="mensagem" placeholder="Digite sua mensagem aqui" key={crypto.randomUUID()}></textarea>
-                    <Button label="" click={enviar} key={crypto.randomUUID()}/>
+                    <Button label="" click={enviar} key={crypto.randomUUID()}/>                    
+                    <input type="file" id="uploadField" onChange={upload} style={{display:'none'}}/>
+                    <button id="fileSelect" type="button" onClick={openFileSelectorDialog}></button>
                 </div>
             </div>            
         </>
