@@ -52,7 +52,7 @@ const Container = () => {
     
     const closeModals = (event) => {
         event.stopPropagation();
-        event.preventDefault();
+        //event.preventDefault();
         let modais = Array.from(document.getElementsByClassName('menumodal'));
         modais.forEach(m => {
             m.style.display = 'none';
