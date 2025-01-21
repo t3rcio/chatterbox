@@ -21,7 +21,9 @@ Ex. de Message em json
         "id":"546876433454f6ad4f6a8sdf6a5ds4afs"
     }, 
     "text":"", 
-    "blob":"", # nao usado pqto
+    "blob":"", # para compartilhar arquivos
+    "url": "", # url do arquivo enviado/recebido
+    "type": "", # mimetype do arquivo
     "user":{
         "id":2313213
     }, 
@@ -108,7 +110,9 @@ class MainHandler(websocket.WebSocketHandler):
                 'id': chat_id
             },
             'text': _message.get('text'),
-            'blob': '',
+            'blob': _message.get('blob', ''),
+            'url': _message.get('url', ''),
+            'type': _message.get('type', ''),
             'user': {
                 'id': user[0],
                 'username': user[4]
