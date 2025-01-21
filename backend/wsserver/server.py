@@ -28,6 +28,7 @@ parser.add_option(
 parser.add_option(
     '-s',
     '--ssl',
+    action='store_true',
     dest='ssl',
     help='Enables SSL',
     default=False
