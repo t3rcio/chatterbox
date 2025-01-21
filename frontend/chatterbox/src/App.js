@@ -124,7 +124,7 @@ const App = (props) => {
   }
 
   const accessChat = (event) => {
-    event.preventDefault();
+    //event.preventDefault();
     let chat_id = event.target.elements[0].value;
     let user = JSON.parse(localStorage.getItem("user"));
     if (Boolean(chat_id)){
