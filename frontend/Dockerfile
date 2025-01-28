@@ -7,7 +7,9 @@ COPY chatterbox/ /code/
 COPY chatterbox/package.json /code/package.json
 
 RUN npm install
+RUN npm run build
+RUN npm install -g serve
 
 ENV PORT=3000
 
-CMD [ "npm", "start" ]
+CMD [ "serve", "-s", "build" ]
