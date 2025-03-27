@@ -251,7 +251,7 @@ const App = (props) => {
       let items = [];
       let counter = 0;
       getUserChats();
-      chats_collection = JSON.parse(localStorage.getItem("chats_collection"));
+      chats_collection = JSON.parse(localStorage.getItem("chats_collection")) || [];
       if (chats_collection === null) {
         setScreen("LOADING_CHATS");
       }
