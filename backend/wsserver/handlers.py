@@ -1,5 +1,6 @@
 
 import aiosqlite
+import psycopg2
 import json
 import logging
 
@@ -39,8 +40,8 @@ async def connect():
     '''
     (async) Conecta ao banco
     '''
-    db = await aiosqlite.connect(settings.DATABASES.get('default', {}).get('NAME', ''))
-    return db
+    dsn = "dbname = {} user={}"
+    return psycopg2.AsyncConnection.connect(dsn)    
 
 async def get_chat(id:str) -> tuple:
     '''
@@ -48,10 +49,11 @@ async def get_chat(id:str) -> tuple:
     '''
     result = ()
     try:
-        database = await connect()
-        cursor = await database.execute("SELECT * FROM core_chat WHERE id = '%s'" % (id,))
-        result = await cursor.fetchone()
-        await cursor.close()
+        conn = await connect()
+        async with conn as database:
+            async with database.cursor() as acursor:
+                await acursor.execute("SELECT * FROM core_chat WHERE id = '%s'" % (id,))
+                result = await acursor.fetchone()
     except Exception as _error:
         logging.error(str(_error))
     
@@ -60,10 +62,11 @@ async def get_chat(id:str) -> tuple:
 async def get_user(id:int) -> tuple:
     result = ()
     try:
-        database = await connect()
-        cursor = await database.execute("SELECT * FROM auth_user WHERE id = %s" % ( int(id),))
-        result = await cursor.fetchone()
-        await cursor.close()
+        conn = await connect()
+        async with conn as database:
+            async with database.cursor() as acursor:
+                await acursor.execute("SELECT * FROM auth_user WHERE id = %s" % ( int(id),))
+                result = await acursor.fetchone()
     except Exception as _error:
         logging.error(str(_error))
     
