@@ -142,3 +142,12 @@ if not DEBUG:
 FORMAT_DATE = '%Y-%m-%d'
 LOG_FILES_PATH = os.path.join(BASE_DIR, '_logs')
 LOG_FILENAME = LOG_FILES_PATH +'/'+ datetime.now().strftime(FORMAT_DATE) + '.log'
+
+# S3 settings
+S3 = {
+    'REGION': config('S3_REGION'),
+    'BUCKET_NAME': config('S3_BUCKET_NAME'),
+    'BUCKET_URL': config('S3_BUCKET_URL'),
+    'ACCESS_KEY': config('S3_ACCESS_KEY'),
+    'SECRET_ACCESS_KEY': config('S3_SECRET_ACCESS_KEY')
+}

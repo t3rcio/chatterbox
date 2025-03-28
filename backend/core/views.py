@@ -9,6 +9,7 @@ from django.conf import settings
 from ninja import NinjaAPI
 
 from core.models import Chat, Message, ChatUsers
+from s3.utils import get_upload_presigned_url
 
 HEADER_CORS = 'Access-Control-Allow-Origin'
 
@@ -202,3 +203,11 @@ def remove_chat_user(request, user_id, chat_id):
     _response = JsonResponse(response, safe=False)
     _response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
     return _response
+
+
+@api.get('/upload_url/{filename}')
+def get_url_upload_S3(request, filename):
+    presigned_url = get_upload_presigned_url(filename)    
+    response = JsonResponse(presigned_url, safe=False)
+    response[HEADER_CORS] = settings.ALLOWED_CORS_SERVERS
+    return response
