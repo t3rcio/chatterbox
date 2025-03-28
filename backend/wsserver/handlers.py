@@ -1,5 +1,6 @@
 
 import aiosqlite
+import psycopg2
 import json
 import logging
 
@@ -21,7 +22,9 @@ Ex. de Message em json
         "id":"546876433454f6ad4f6a8sdf6a5ds4afs"
     }, 
     "text":"", 
-    "blob":"", # nao usado pqto
+    "blob":"", # para compartilhar arquivos
+    "url": "", # url do arquivo enviado/recebido
+    "type": "", # mimetype do arquivo
     "user":{
         "id":2313213
     }, 
@@ -37,8 +40,8 @@ async def connect():
     '''
     (async) Conecta ao banco
     '''
-    db = await aiosqlite.connect(settings.DATABASES.get('default', {}).get('NAME', ''))
-    return db
+    dsn = "dbname = {} user={}"
+    return psycopg2.AsyncConnection.connect(dsn)    
 
 async def get_chat(id:str) -> tuple:
     '''
@@ -46,10 +49,11 @@ async def get_chat(id:str) -> tuple:
     '''
     result = ()
     try:
-        database = await connect()
-        cursor = await database.execute("SELECT * FROM core_chat WHERE id = '%s'" % (id,))
-        result = await cursor.fetchone()
-        await cursor.close()
+        conn = await connect()
+        async with conn as database:
+            async with database.cursor() as acursor:
+                await acursor.execute("SELECT * FROM core_chat WHERE id = '%s'" % (id,))
+                result = await acursor.fetchone()
     except Exception as _error:
         logging.error(str(_error))
     
@@ -58,10 +62,11 @@ async def get_chat(id:str) -> tuple:
 async def get_user(id:int) -> tuple:
     result = ()
     try:
-        database = await connect()
-        cursor = await database.execute("SELECT * FROM auth_user WHERE id = %s" % ( int(id),))
-        result = await cursor.fetchone()
-        await cursor.close()
+        conn = await connect()
+        async with conn as database:
+            async with database.cursor() as acursor:
+                await acursor.execute("SELECT * FROM auth_user WHERE id = %s" % ( int(id),))
+                result = await acursor.fetchone()
     except Exception as _error:
         logging.error(str(_error))
     
@@ -108,7 +113,9 @@ class MainHandler(websocket.WebSocketHandler):
                 'id': chat_id
             },
             'text': _message.get('text'),
-            'blob': '',
+            'blob': _message.get('blob', ''),
+            'url': _message.get('url', ''),
+            'type': _message.get('type', ''),
             'user': {
                 'id': user[0],
                 'username': user[4]
