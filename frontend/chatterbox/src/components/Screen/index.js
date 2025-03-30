@@ -1,16 +1,16 @@
 
 import {Socket, connections, onReceiveMessage} from '../Socket';
-import S3Service from '../S3Service';
 import Button from '../Button';
 import "./Screen.css";
 import { useEffect, useState } from 'react';
+import RestAPI from '../RestAPI';
 
 const Screen = (props) => {     
     
     let user = JSON.parse(localStorage.getItem("user"));
     let messages = JSON.parse(localStorage.getItem("messages"));
     const [conversation, setConversation] = useState(messages);
-    let s3Service = new S3Service();
+    let rest_api = new RestAPI();
     
     useEffect(() => {
         let mensagens = document.getElementsByClassName('messages-frame');
@@ -154,15 +154,37 @@ const Screen = (props) => {
     const upload = (event) => {
         let uploadField = event.target;
         let files = uploadField.files;        
-        let reader = new FileReader();        
+        let reader = new FileReader();  
+        let postData = new FormData();
         reader.onload = function (evt) {
-            s3Service.upload(files[0].name, evt.target.result).then(url => {
-                let __message = Message;
-                __message.blob = true;
-                __message.type = files[0].type;
-                __message.url = url;
-                websocket.send(JSON.stringify(__message));                
-            }).catch(err => console.log(err));
+            rest_api.get_upload_url(files[0].name).then(presigned_url => {
+                postData.append("key", presigned_url.fields.key);
+                postData.append("x-amz-credential", presigned_url.fields['x-amz-credential']);
+                postData.append("x-amz-algorithm", presigned_url.fields['x-amz-algorithm']);
+                postData.append("x-amz-date", presigned_url.fields['x-amz-date']);
+                postData.append("policy", presigned_url.fields.policy);
+                postData.append("x-amz-signature", presigned_url.fields['x-amz-signature']);
+                postData.append("file", files[0]);                
+                
+                fetch(
+                    presigned_url.url,
+                    {
+                        method: "POST",
+                        body: postData,
+                    }
+                )
+            });
+        }
+        let url_objeto = rest_api.get_url_objeto_S3(files[0].name)
+        try{
+            let __message = Message;
+            __message.blob = true;
+            __message.type = files[0].type;
+            __message.url = url_objeto;
+            websocket.send(JSON.stringify(__message));
+        }
+        catch(err){
+            console.log("Erro ao criar objeto Message com o objeto S3: ", err)
         }
         reader.readAsArrayBuffer(files[0]);
     }
