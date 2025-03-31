@@ -1,6 +1,8 @@
+aiopg==1.4.0
 aiosqlite==0.20.0
 annotated-types==0.7.0
 asgiref==3.8.1
+async-timeout==4.0.3
 attrs==24.2.0
 autobahn==24.4.2
 Automat==24.8.1
@@ -28,6 +30,7 @@ packaging==24.2
 pkg_resources==0.0.0
 pluggy==1.5.0
 psycopg2==2.9.10
+psycopg2-binary==2.9.10
 pyasn1==0.6.1
 pyasn1_modules==0.4.1
 pycparser==2.22
