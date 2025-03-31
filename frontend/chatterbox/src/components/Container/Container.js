@@ -51,8 +51,8 @@ const Container = () => {
     }
     
     const closeModals = (event) => {
-        event.stopPropagation();
-        //event.preventDefault();
+        //event.stopPropagation(); // TODO: fix this
+        //event.preventDefault(); // TODO: fix this
         let modais = Array.from(document.getElementsByClassName('menumodal'));
         modais.forEach(m => {
             m.style.display = 'none';
