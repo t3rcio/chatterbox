@@ -5,7 +5,7 @@ import os
 import boto3
 import requests
 
-from s3.utils import get_upload_presigned_url
+from s3.utils import get_upload_presigned_url, get_download_presigend_url
 class TestS3Upload(TestCase):
 
     s3_client = {}
@@ -52,6 +52,13 @@ class TestS3Upload(TestCase):
         )
         os.remove(file_name)        
         self.assertEqual(res.status_code, 204)
+    
+    def test_get_download_url(self):
+        file_name = 'teste.txt'
+        url = get_download_presigend_url(file_name)        
+        self.assertNotEqual(url, '')
+        self.assertIsNotNone(url)
+        
 
         
         
