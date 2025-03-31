@@ -1,6 +1,5 @@
 
-import aiosqlite
-import psycopg2
+import aiopg
 import json
 import logging
 
@@ -35,13 +34,12 @@ Ex. de Message em json
 logging.basicConfig(
     filename=LOG_FILENAME
 )
-
-async def connect():
-    '''
-    (async) Conecta ao banco
-    '''
-    dsn = "dbname = {} user={}"
-    return psycopg2.AsyncConnection.connect(dsn)    
+dsn = "dbname={dbname} user={user} password={password} host={host}".format(
+    dbname=settings.DATABASES.get('default', {}).get('NAME'),
+    user=settings.DATABASES.get('default', {}).get('USER'),
+    password=settings.DATABASES.get('default', {}).get('PASSWORD'),
+    host=settings.DATABASES.get('default', {}).get('HOST'),
+)
 
 async def get_chat(id:str) -> tuple:
     '''
@@ -49,7 +47,7 @@ async def get_chat(id:str) -> tuple:
     '''
     result = ()
     try:
-        conn = await connect()
+        conn = aiopg.connect(dsn=dsn)
         async with conn as database:
             async with database.cursor() as acursor:
                 await acursor.execute("SELECT * FROM core_chat WHERE id = '%s'" % (id,))
@@ -62,7 +60,7 @@ async def get_chat(id:str) -> tuple:
 async def get_user(id:int) -> tuple:
     result = ()
     try:
-        conn = await connect()
+        conn = aiopg.connect(dsn=dsn)
         async with conn as database:
             async with database.cursor() as acursor:
                 await acursor.execute("SELECT * FROM auth_user WHERE id = %s" % ( int(id),))
