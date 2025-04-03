@@ -10,7 +10,7 @@ class RestAPI {
     static API_CHAT_USERS = RestAPI.API_ROOT + "chat/";
     static API_DELETE_CHAT = RestAPI.API_ROOT + "chat/";
     static API_URL_UPLOAD_S3 = RestAPI.API_ROOT + "upload_url/";
-    static API_URL_DOWNLOAD_S3 = RestAPI.API_URL_DOWNLOAD_S3 + "download_url/";
+    static API_URL_DOWNLOAD_S3 = RestAPI.API_ROOT + "download_url/";
     //API_OBTEM_CHATS_USUARIO = API_ROOT + `users/${user_id}/chats`
 
     create_chat = (form_data) => {

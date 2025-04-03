@@ -20,6 +20,42 @@ const Screen = (props) => {
         }
     })
 
+    useEffect(() => {
+        let images = Array.from(document.getElementsByTagName("IMG"));
+        let videos = Array.from(document.getElementsByTagName("VIDEO"));        
+        for (let i of images) {
+            let _parent = i.parentElement;
+            i.key = crypto.randomUUID();
+            fetch(i.src).then(response => {
+                if(!response.ok){
+                    i.src="assets/icons/out-of-time.png";
+                    i.width="80";
+                    i.alt = "out-of-time.png";
+                    i.title = "Expirado. Solicite o reenvio do arquivo.";
+                    let caption = document.createElement("SPAN");
+                    caption.innerText = "Mídia expirada. Solicite o reenvio do arquivo";
+                    _parent.appendChild(caption);
+                }
+            })
+        }
+        for (let v of videos) {
+            v.key = crypto.randomUUID();
+            fetch(v.src).then(response => {
+                let _parent = v.parentElement;
+                if(!response.ok){
+                    v.remove();
+                    let warning = document.createElement('IMG');                    
+                    warning.src = "assets/icons/out-of-time.png";
+                    warning.width = "80";
+                    v.parentElement.appendChild(warning);
+                    let caption = document.createElement("SPAN");
+                    caption.innerText = "Mídia expirada. Solicite o reenvio do arquivo";
+                    _parent.appendChild(caption);                    
+                }
+            })
+        }
+    })
+
     const timestampToDateTime = (timestamp) => {
         let date = new Date(timestamp * 1000);        
         let hours = date.getHours();        
@@ -175,17 +211,20 @@ const Screen = (props) => {
                 )
             });
         }
-        let url_objeto = rest_api.get_url_objeto_S3(files[0].name)
-        try{
-            let __message = Message;
-            __message.blob = true;
-            __message.type = files[0].type;
-            __message.url = url_objeto;
-            websocket.send(JSON.stringify(__message));
-        }
-        catch(err){
-            console.log("Erro ao criar objeto Message com o objeto S3: ", err)
-        }
+        rest_api.get_url_objeto_S3(files[0].name).then(obj_url => {
+            let url_objeto = obj_url.url;
+            try{
+                let __message = Message;
+                __message.blob = true;
+                __message.type = files[0].type;
+                __message.url = url_objeto;
+                websocket.send(JSON.stringify(__message));
+            }
+            catch(err){
+                console.log("Erro ao criar objeto Message com o objeto S3: ", err)
+            }
+        }).catch(data => console.log(data));
+        
         reader.readAsArrayBuffer(files[0]);
     }
 
