@@ -70,7 +70,7 @@ const Container = () => {
                 </span>
                 <div id="app-options" onClick={openMenuOptionsModal}>
                 <div className='menumodal' id="app-options-menumodal">
-                    <span onClick={logoff}>Sair</span>
+                    <span onClick={logoff}>Sair do App</span>
                 </div>
                 </div>
             </header>
