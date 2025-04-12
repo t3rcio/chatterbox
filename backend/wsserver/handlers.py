@@ -1,5 +1,5 @@
 
-import aiosqlite
+import aiopg
 import json
 import logging
 
@@ -34,13 +34,12 @@ Ex. de Message em json
 logging.basicConfig(
     filename=LOG_FILENAME
 )
-
-async def connect():
-    '''
-    (async) Conecta ao banco
-    '''
-    db = await aiosqlite.connect(settings.DATABASES.get('default', {}).get('NAME', ''))
-    return db
+dsn = "dbname={dbname} user={user} password={password} host={host}".format(
+    dbname=settings.DATABASES.get('default', {}).get('NAME'),
+    user=settings.DATABASES.get('default', {}).get('USER'),
+    password=settings.DATABASES.get('default', {}).get('PASSWORD'),
+    host=settings.DATABASES.get('default', {}).get('HOST'),
+)
 
 async def get_chat(id:str) -> tuple:
     '''
@@ -48,10 +47,11 @@ async def get_chat(id:str) -> tuple:
     '''
     result = ()
     try:
-        database = await connect()
-        cursor = await database.execute("SELECT * FROM core_chat WHERE id = '%s'" % (id,))
-        result = await cursor.fetchone()
-        await cursor.close()
+        conn = aiopg.connect(dsn=dsn)
+        async with conn as database:
+            async with database.cursor() as acursor:
+                await acursor.execute("SELECT * FROM core_chat WHERE id = '%s'" % (id,))
+                result = await acursor.fetchone()
     except Exception as _error:
         logging.error(str(_error))
     
@@ -60,10 +60,11 @@ async def get_chat(id:str) -> tuple:
 async def get_user(id:int) -> tuple:
     result = ()
     try:
-        database = await connect()
-        cursor = await database.execute("SELECT * FROM auth_user WHERE id = %s" % ( int(id),))
-        result = await cursor.fetchone()
-        await cursor.close()
+        conn = aiopg.connect(dsn=dsn)
+        async with conn as database:
+            async with database.cursor() as acursor:
+                await acursor.execute("SELECT * FROM auth_user WHERE id = %s" % ( int(id),))
+                result = await acursor.fetchone()
     except Exception as _error:
         logging.error(str(_error))
     
