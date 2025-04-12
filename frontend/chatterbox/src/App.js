@@ -56,14 +56,19 @@ const App = (props) => {
     let form = document.getElementById('form-cadastro');
     let username = form.elements[1].value;
     let email = form.elements[0].value;
-    let data = new FormData()
-    data.append('username', username);
-    data.append('email', email);
-
-    api.create_user(data).then((user) => {
-      localStorage.setItem("user", JSON.stringify(user));
-    }).catch((data) => console.log(data));
-    setScreen("NEWCHAT");
+    if (Boolean(username) && Boolean(email)){
+      let data = new FormData()
+      data.append('username', username);
+      data.append('email', email);
+  
+      api.create_user(data).then((user) => {
+        localStorage.setItem("user", JSON.stringify(user));
+      }).catch((data) => console.log(data));
+      setScreen("NEWCHAT");
+    }
+    else{
+      window.alert("Por favor, informe username e email");
+    }
   }
 
   const iniciarNovoChat = (event) => {
@@ -124,7 +129,7 @@ const App = (props) => {
   }
 
   const accessChat = (event) => {
-    event.preventDefault();
+    //event.preventDefault();
     let chat_id = event.target.elements[0].value;
     let user = JSON.parse(localStorage.getItem("user"));
     if (Boolean(chat_id)){
@@ -208,20 +213,20 @@ const App = (props) => {
                       </h3>
                       <input type="text" placeholder="Digite seu email" required name="username" defaultValue={''}/>
                       <input type="text" placeholder="Digite um usuário" required name="email" defaultValue={''}/>
-                      <button type='button' onClick={createUser} className='form-button'>Criar conta</button>
+                      <button type='button' onClick={createUser} className='form-button success'>Criar conta</button>
                       <hr/>
                       <h3>Já tem uma conta? Faça seu login</h3>
-                      <button className='form-button' onClick={_login}>Login</button>                      
+                      <button className='form-button warning' onClick={_login}>Login</button>                      
                   </form>
       break;
     case "LOGIN":
       component = <form id="form-login">
                       <h3>ChatterBox - Login</h3>
-                      <input type="text" name="username" placeholder="Digite seu usuário" defaultValue={''}/>
-                      <button type='button' onClick={getUser} className='form-button'>Acessar</button>
+                      <input type="text" name="username" placeholder="Digite seu usuário" required defaultValue={''}/>
+                      <button type='button' onClick={getUser} className='form-button success'>Acessar</button>
                       <hr/>
-                      <button type='button' className='form-button'onClick={event => {setScreen("CADASTRO")}}>
-                        Voltar
+                      <button type='button' className='form-button warning'onClick={event => {setScreen("CADASTRO")}}>
+                        Criar conta
                       </button>                      
                   </form>
       break;
@@ -286,10 +291,10 @@ const App = (props) => {
         component = <form id="form-chat" onSubmit={accessChat} >
             <h3>Foi convidado para um chat?</h3>
             <input type="text" name="chat_id" placeholder="Cole o codigo da conversa aqui" defaultChecked={''} />
-            <button type="submit" className='form-button'>Conversar</button>
+            <button type="submit" className='form-button success'>Conversar</button>
             <hr/>
             <h3>Crie seu chat</h3>
-            <button className="form-button" onClick={iniciarNovoChat}>
+            <button className="form-button warning" onClick={iniciarNovoChat}>
               Iniciar chat
             </button>
           </form>        
@@ -305,12 +310,12 @@ const App = (props) => {
         <h2>
           Comece a conversar no Chatterbox
         </h2>
-        <button onClick={iniciarNovoChat} className='form-button'>Novo chat</button>        
+        <button onClick={iniciarNovoChat} className='form-button success'>Novo chat</button>        
         <hr/>
         <form id="form-chat" onSubmit={accessChat} >
             <h3>Ou cole um código de conversa recebido</h3>
             <input type="text" name="chat_id" placeholder="Cole o codigo da conversa aqui" defaultChecked={''} />
-            <button type="submit" className="form-button">Acessar chat</button>
+            <button type="submit" className="form-button warning">Acessar chat</button>
         </form>
       </div>
       </>

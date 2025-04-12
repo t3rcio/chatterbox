@@ -2,13 +2,15 @@
 const PORT = '8000';
 
 class RestAPI {
-    static API_ROOT = "http://chatterbox.app.br:" + PORT +"/api/";    
+    static API_ROOT = "https://chatterbox.app.br:" + PORT +"/api/";    
     static API_CREATE_CHAT = RestAPI.API_ROOT + "chat/new";
     static API_CADASTRA_USUARIO = RestAPI.API_ROOT + "users/new";
     static API_OBTEM_USUARIO = RestAPI.API_ROOT + "user/";
     static API_ACCESS_CHAT = RestAPI.API_ROOT + "chat/access/";
     static API_CHAT_USERS = RestAPI.API_ROOT + "chat/";
     static API_DELETE_CHAT = RestAPI.API_ROOT + "chat/";
+    static API_URL_UPLOAD_S3 = RestAPI.API_ROOT + "upload_url/";
+    static API_URL_DOWNLOAD_S3 = RestAPI.API_ROOT + "download_url/";
     //API_OBTEM_CHATS_USUARIO = API_ROOT + `users/${user_id}/chats`
 
     create_chat = (form_data) => {
@@ -78,6 +80,24 @@ class RestAPI {
             fetch(RestAPI.API_DELETE_CHAT + user_id + "/" + chat_id, {
                 method: 'DELETE'
             })
+            .then(response => response.json())
+            .then(result => resolve(result))
+            .catch(data => reject(data));
+        })        
+    }
+
+    get_upload_url = (filename) => {
+        return new Promise((resolve, reject) => {
+            fetch(RestAPI.API_URL_UPLOAD_S3 + filename)
+            .then(response => response.json())
+            .then(result => resolve(result))
+            .catch(data => reject(data));
+        })
+    }
+
+    get_url_objeto_S3 = (filename) => {
+        return new Promise((resolve, reject) => {
+            fetch(RestAPI.API_URL_DOWNLOAD_S3 + filename)
             .then(response => response.json())
             .then(result => resolve(result))
             .catch(data => reject(data));

@@ -51,8 +51,8 @@ const Container = () => {
     }
     
     const closeModals = (event) => {
-        event.stopPropagation();
-        event.preventDefault();
+        //event.stopPropagation(); // TODO: fix this
+        //event.preventDefault(); // TODO: fix this
         let modais = Array.from(document.getElementsByClassName('menumodal'));
         modais.forEach(m => {
             m.style.display = 'none';
@@ -70,7 +70,7 @@ const Container = () => {
                 </span>
                 <div id="app-options" onClick={openMenuOptionsModal}>
                 <div className='menumodal' id="app-options-menumodal">
-                    <span onClick={logoff}>Sair</span>
+                    <span onClick={logoff}>Sair do App</span>
                 </div>
                 </div>
             </header>

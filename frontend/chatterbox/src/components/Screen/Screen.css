@@ -64,15 +64,20 @@
     max-width: 80%;
 }
 .messages span {
+    float:left;
     text-align: left;
     padding:0.5%;
-    font-size: 0.8em;
+    font-size: 0.87em;
     margin:3%;
+    width: 75%;
+    font-weight: bold;
 }
 .messages p {
     text-align: left;    
     padding:1%;
-    margin: 3%;
+    float:left;
+    margin:3%;    
+    width: 98%;
     font-size:0.995em;
     line-height: 20px;
 }
@@ -116,6 +121,20 @@ button {
     background-color: #efefef
 }
 
+button#fileSelect {
+    border: none;
+    border-radius:50px;
+    width: 50px;
+    height: 50px;
+    background: url('/public/assets/icons/paper-clip.png');
+    background-size: 50%;
+    background-position: 10px center;
+    background-repeat: no-repeat;   
+    border: solid 1px #dcdcdc;
+    cursor: pointer;
+    background-color: #efefef
+}
+
 .header-button {
     background: none;
     background-color: #99a0ef;
@@ -141,6 +160,14 @@ button {
 
 #mensagem:focus{
     border: none;
+}
+.messages-frame .img-frame{
+    width: 99%;
+    padding:0.5%;
+    text-align: center;
+}
+.messages-frame img {    
+    border-radius:5px;
 }
 
 @media screen and (min-width: 768px) {

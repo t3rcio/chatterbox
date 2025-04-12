@@ -13,6 +13,7 @@ https://docs.djangoproject.com/en/3.2/ref/settings/
 import os
 
 from datetime import datetime
+from decouple import config
 from pathlib import Path
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -23,7 +24,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # See https://docs.djangoproject.com/en/3.2/howto/deployment/checklist/
 
 # SECURITY WARNING: keep the secret key used in production secret!
-SECRET_KEY = 'django-insecure-o17mc0vc(ksktsoz5h)_#m7=hnm^n1!ln4ck9bvj-!jwzcp())'
+SECRET_KEY = config('SECRET_KEY')
 
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
@@ -79,9 +80,13 @@ WSGI_APPLICATION = 'chatterbox.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
-    }
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'chatterbox',
+        'USER': config('DB_USER', default='postgres'),
+        'PASSWORD': config('DB_PASSWORD'),
+        'HOST': config('DB_HOST', default='127.0.0.1'),
+        'PORT': config('DB_PORT', default='5432')
+    },
 }
 
 
@@ -129,11 +134,20 @@ STATIC_URL = '/static/'
 DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 # Chatterbox
-ALLOWED_CORS_SERVERS = '*, chatterbox.app.br'
+ALLOWED_CORS_SERVERS = '*'
 
 if not DEBUG:
-    ALLOWED_CORS_SERVERS = 'localhost, chatterbox.app.br'
+    ALLOWED_CORS_SERVERS = 'chatterbox.app.br'
 
 FORMAT_DATE = '%Y-%m-%d'
 LOG_FILES_PATH = os.path.join(BASE_DIR, '_logs')
 LOG_FILENAME = LOG_FILES_PATH +'/'+ datetime.now().strftime(FORMAT_DATE) + '.log'
+
+# S3 settings
+S3 = {
+    'REGION': config('S3_REGION'),
+    'BUCKET_NAME': config('S3_BUCKET_NAME'),
+    'BUCKET_URL': config('S3_BUCKET_URL'),
+    'ACCESS_KEY': config('S3_ACCESS_KEY'),
+    'SECRET_ACCESS_KEY': config('S3_SECRET_ACCESS_KEY')
+}

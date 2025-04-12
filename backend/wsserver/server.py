@@ -25,6 +25,14 @@ parser.add_option(
     help='Port to listen',
     default=DEFAULT_PORT
 )
+parser.add_option(
+    '-s',
+    '--ssl',
+    action='store_true',
+    dest='ssl',
+    help='Enables SSL',
+    default=False
+)
 
 sys.path.insert(0, PRODUCTION_PATH)
 
@@ -45,12 +53,13 @@ async def main(port=8000):
     http_server = tornado.httpserver.HTTPServer(app)
     
     config_dict = getattr(wsserver_settings, "SSL", {})
-    if config_dict:
+    if config_dict and options.ssl:
         ssl_options = dict(certfile=config_dict.get("certfile"), keyfile=config_dict.get("keyfile"))
         http_server = tornado.httpserver.HTTPServer(app, ssl_options=ssl_options)
     
     if settings.DEBUG:
-        print("Server running... listening " + str(port))
+        status = 'Server running... listening ' + str(port) + ' SSL: ' + str(ssl) if options.ssl else 'Server running. Listening ' + str(port);
+        print(status)
     
     http_server.listen(port)
     await asyncio.Event().wait()
