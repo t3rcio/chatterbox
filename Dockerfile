@@ -2,7 +2,7 @@
 FROM python:3.11
 ENV PYTHONUNBUFFERED=1
 
-RUN apt-get update && apt-get install -y supervisor && apt-get install nano -y
+RUN apt-get update && apt-get install -y supervisor && apt-get install nano postgresql-client -y
 RUN mkdir -p /var/log/supervisor
 
 WORKDIR /code
@@ -12,9 +12,11 @@ COPY backend/ /code/
 RUN pip install -r requirements.txt
 
 COPY ./deploy/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+COPY ./deploy/wait-for-db.sh /code/wait-for-db.sh
+RUN chmod +x /code/wait-for-db.sh
 
-RUN python manage.py migrate
-
+ENTRYPOINT ["/code/wait-for-db.sh"]
+# RUN python /code/manage.py migrate
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 
