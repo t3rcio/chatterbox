@@ -16,7 +16,6 @@ COPY ./deploy/wait-for-db.sh /code/wait-for-db.sh
 RUN chmod +x /code/wait-for-db.sh
 
 ENTRYPOINT ["/code/wait-for-db.sh"]
-# RUN python /code/manage.py migrate
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 
