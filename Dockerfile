@@ -12,10 +12,9 @@ COPY backend/ /code/
 RUN pip install -r requirements.txt
 
 COPY ./deploy/supervisord.conf /etc/supervisor/conf.d/supervisord.conf
-COPY ./deploy/wait-for-db.sh /code/wait-for-db.sh
-RUN chmod +x /code/wait-for-db.sh
+RUN chmod +x wait-for-db.sh
 
-ENTRYPOINT ["/code/wait-for-db.sh"]
+ENTRYPOINT ["./wait-for-db.sh"]
 CMD ["supervisord", "-c", "/etc/supervisor/conf.d/supervisord.conf"]
 
 
